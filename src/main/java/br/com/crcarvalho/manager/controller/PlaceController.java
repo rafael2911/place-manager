@@ -3,6 +3,7 @@ package br.com.crcarvalho.manager.controller;
 import java.net.URI;
 import java.util.Optional;
 
+import javax.transaction.Transactional;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -44,6 +46,7 @@ public class PlaceController {
 	}
 	
 	@PostMapping
+	@Transactional
 	public ResponseEntity<Place> register(@RequestBody @Valid PlaceForm form, UriComponentsBuilder uriBuilder){
 		Place place = form.toConvert();
 		this.placeRepository.save(place);
@@ -62,6 +65,19 @@ public class PlaceController {
 		
 		if(optional.isPresent()) {
 			return ResponseEntity.ok().body(optional.get());
+		}
+		
+		return ResponseEntity.notFound().build();
+	}
+	
+	@PutMapping("{id}")
+	@Transactional
+	public ResponseEntity<Place> update(@PathVariable("id") Long id, @RequestBody @Valid PlaceForm form) {
+		Optional<Place> optional = placeRepository.findById(id);
+		
+		if(optional.isPresent()) {
+			Place place = form.update(id, placeRepository);
+			return ResponseEntity.ok().body(place);
 		}
 		
 		return ResponseEntity.notFound().build();

@@ -1,9 +1,12 @@
 package br.com.crcarvalho.manager.controller.form;
 
+import java.time.LocalDateTime;
+
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
 import br.com.crcarvalho.manager.model.Place;
+import br.com.crcarvalho.manager.repository.PlaceRepository;
 
 public class PlaceForm {
 	
@@ -54,6 +57,17 @@ public class PlaceForm {
 	public Place toConvert() {
 
 		return new Place(name, slug, city, state);
+	}
+
+	public Place update(Long id, PlaceRepository placeRepository) {
+		Place place = placeRepository.getOne(id);
+		place.setName(this.name);
+		place.setSlug(this.slug);
+		place.setCity(this.city);
+		place.setState(this.state);
+		place.setUpdatedAt(LocalDateTime.now());
+		
+		return place;
 	}
 
 }
