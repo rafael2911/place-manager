@@ -37,7 +37,7 @@ public class PlaceController {
 	@Autowired
 	private PlaceRepository placeRepository;
 	
-	@GetMapping
+	@GetMapping(consumes = MediaType.ALL_VALUE)
 	public Page<Place> toList(@PageableDefault(page = 0, size = 10) Pageable pagination,
 			@RequestParam(required = false) String name){
 
@@ -59,7 +59,7 @@ public class PlaceController {
 		return ResponseEntity.created(location).body(place);
 	}
 	
-	@GetMapping("{id}")
+	@GetMapping(value = "{id}", consumes = MediaType.ALL_VALUE)
 	public ResponseEntity<Place> detail(@PathVariable("id") Long id) {
 		Optional<Place> optional = placeRepository.findById(id);
 		
