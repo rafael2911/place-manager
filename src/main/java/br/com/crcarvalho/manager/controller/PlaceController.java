@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -37,11 +38,10 @@ public class PlaceController {
 	private PlaceRepository placeRepository;
 	
 	@GetMapping
-	public Page<Place> toList(@PageableDefault(page = 0, size = 10) Pageable pagination){
-		
-		Page<Place> places = placeRepository.findAll(pagination);
-		
-		return places;
+	public Page<Place> toList(@PageableDefault(page = 0, size = 10) Pageable pagination,
+			@RequestParam(required = false) String name){
+
+		return (name == null) ? placeRepository.findAll(pagination) : placeRepository.findByName(name, pagination);
 		
 	}
 	
