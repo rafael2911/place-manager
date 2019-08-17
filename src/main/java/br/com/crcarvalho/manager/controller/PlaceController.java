@@ -8,6 +8,7 @@ import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.MediaType;
@@ -44,9 +45,12 @@ public class PlaceController {
 	
 	@GetMapping(consumes = MediaType.ALL_VALUE)
 	@ApiOperation(value = "List places and filter them by name")
-	public Page<Place> toList(@PageableDefault(page = 0, size = 10) Pageable pagination,
+	public Page<Place> toList(@RequestParam(defaultValue = "0") int page,
+			@RequestParam(defaultValue = "10") int size,
 			@RequestParam(required = false) String name){
-
+		
+		Pageable pagination = PageRequest.of(page, size);
+		
 		return (name == null) ? placeRepository.findAll(pagination) : placeRepository.findByName(name, pagination);
 		
 	}
