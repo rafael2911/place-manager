@@ -12,6 +12,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -25,6 +26,8 @@ import org.springframework.web.util.UriComponentsBuilder;
 import br.com.crcarvalho.manager.controller.form.PlaceForm;
 import br.com.crcarvalho.manager.model.Place;
 import br.com.crcarvalho.manager.repository.PlaceRepository;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 
 @RestController
 @RequestMapping(
@@ -32,12 +35,15 @@ import br.com.crcarvalho.manager.repository.PlaceRepository;
 		produces = MediaType.APPLICATION_JSON_UTF8_VALUE,
 		consumes = MediaType.APPLICATION_JSON_UTF8_VALUE
 		)
+@Api(value = "Api Place Manager")
+@CrossOrigin(origins = "*")
 public class PlaceController {
 	
 	@Autowired
 	private PlaceRepository placeRepository;
 	
 	@GetMapping(consumes = MediaType.ALL_VALUE)
+	@ApiOperation(value = "List places and filter them by name")
 	public Page<Place> toList(@PageableDefault(page = 0, size = 10) Pageable pagination,
 			@RequestParam(required = false) String name){
 
@@ -47,6 +53,7 @@ public class PlaceController {
 	
 	@PostMapping
 	@Transactional
+	@ApiOperation(value = "Create a place.")
 	public ResponseEntity<Place> register(@RequestBody @Valid PlaceForm form, UriComponentsBuilder uriBuilder){
 		Place place = form.toConvert();
 		this.placeRepository.save(place);
@@ -60,6 +67,7 @@ public class PlaceController {
 	}
 	
 	@GetMapping(value = "{id}", consumes = MediaType.ALL_VALUE)
+	@ApiOperation(value = "Get a specific place.")
 	public ResponseEntity<Place> detail(@PathVariable("id") Long id) {
 		Optional<Place> optional = placeRepository.findById(id);
 		
@@ -72,6 +80,7 @@ public class PlaceController {
 	
 	@PutMapping("{id}")
 	@Transactional
+	@ApiOperation(value = "Edit a place.")
 	public ResponseEntity<Place> update(@PathVariable("id") Long id, @RequestBody @Valid PlaceForm form) {
 		Optional<Place> optional = placeRepository.findById(id);
 		
