@@ -1,7 +1,8 @@
 # Backend Manager Places (CRUD)
 
 ### Address Api Heroku
-- heroku
+- URL Base: https://place-manager-crcarvalho.herokuapp.com/places
+- URL Doc Api: https://place-manager-crcarvalho.herokuapp.com/swagger-ui.html
 
 ### URL
 /places
